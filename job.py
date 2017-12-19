@@ -128,7 +128,8 @@ class FetchAndSendTweetsJob(Job):
                     self.logger.warning("Got duplicated tw_id on this tweet:")
                     self.logger.warning(str(tw_data))
                 except Tweet.DoesNotExist:
-                    tweet_rows.append(tw_data)
+                    if tw_data['text'][0] != '@':
+                        tweet_rows.append(tw_data)
 
                 if len(tweet_rows) >= self.TWEET_BATCH_INSERT_COUNT:
                     Tweet.insert_many(tweet_rows).execute()
